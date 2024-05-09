@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('balance')->default(0);
             $table->string('password');
-            $table->string('limit');
-            $table->boolean('status')->nullable(false);
+            $table->string('limit')->default('0');
+            $table->boolean('status')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
