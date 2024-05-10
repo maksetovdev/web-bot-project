@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\userCreateRequest;
+use App\Http\Requests\userLoginRequest;
 use App\Http\Resources\userResource;
-use App\Models\User;
 use App\Services\User\userCreate;
-use Illuminate\Http\Request;
+use App\Services\User\userLogin;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -19,8 +20,19 @@ class UserController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(userLoginRequest $request)
     {
-        //
+        try {
+            [$user, $token] = app(userLogin::class)->login($request->all());
+            return response([
+                'user_data' => new userResource($user),
+                'token' => $token
+            ]);
+        }
+        catch (ModelNotFoundException $m_error) {
+            return response([
+                'error' => 'User not found or password is incorrect!'
+            ]);
+        }
     }
 }
