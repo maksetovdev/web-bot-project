@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 
-Route::apiResource('categories', CategoryController::class);
-Route::apiResource('brands', BrandController::class);
+// Auth Routes
 Route::post('users/register', [UserController::class, 'register']);
 Route::post('users/login', [UserController::class, 'login']);
+//Other Routes
+Route::apiResource('categories', CategoryController::class);
+Route::apiResource('brands', BrandController::class);
+Route::apiResource('products', ProductsController::class);
