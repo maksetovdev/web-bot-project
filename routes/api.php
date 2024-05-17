@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BasketController;
 
 // Auth Routes
 Route::post('users/register', [UserController::class, 'register']);
@@ -13,3 +14,4 @@ Route::post('users/login', [UserController::class, 'login']);
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('brands', BrandController::class);
 Route::apiResource('products', ProductsController::class);
+Route::middleware('auth:sanctum')->apiResource('baskets', BasketController::class);

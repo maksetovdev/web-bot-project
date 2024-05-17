@@ -2,65 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\basketResource;
 use App\Models\Basket;
 use App\Http\Requests\StoreBasketRequest;
 use App\Http\Requests\UpdateBasketRequest;
+use App\Services\Baskets\basketStore;
+use App\Services\Baskets\basketUpdate;
 
 class BasketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $user_id = auth()->user()->id;
+        $baskets = Basket::where('user_id', $user_id, '=')->get();
+        return basketResource::collection($baskets);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreBasketRequest $request)
     {
-        //
+        $basket = app(basketStore::class)->store($request->all());
+        return new basketResource($basket);
+    }
+    public function show($id)
+    {
+        return new basketResource(Basket::find($id));
+    }
+    public function update(UpdateBasketRequest $request, $id)
+    {
+        $basket = app(basketUpdate::class)->update($request->all(),$id);
+        return new basketResource($basket);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Basket $basket)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Basket $basket)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBasketRequest $request, Basket $basket)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Basket $basket)
-    {
-        //
+        $basket = Basket::find($id);
+        $basket->delete();
+        return response([
+            'status' => 'success'
+        ]);
     }
 }

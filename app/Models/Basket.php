@@ -15,8 +15,8 @@ class Basket extends Model
         'date',
         'status'
     ];
-    public function user(): HasOne {
-        return $this->hasOne(User::class,'id','user_id');
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class,'id','user_id');
     }
 
     public function order(): BelongsTo
