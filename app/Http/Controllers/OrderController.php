@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\orderResource;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
-
+use App\Services\Orders\orderStore;
+use App\Services\Orders\orderUpdate;
+use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     /**
@@ -13,54 +16,28 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return orderResource::collection(Order::all());
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreOrderRequest $request)
     {
-        //
+        $order = app(orderStore::class)->store($request->all());
+        return new orderResource($order);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
+    public function show($id)
     {
-        //
+        return new orderResource(Order::find($id));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
+    public function update(UpdateOrderRequest $request, $id)
     {
-        //
+        $order = app(orderUpdate::class)->update($request->all(), $id);
+        return new orderResource($order);
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function destroy($id)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        Order::destroy($id);
+        return response([
+            'status' => 'success'
+        ], 200);
     }
 }
